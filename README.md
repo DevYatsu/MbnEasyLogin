@@ -12,5 +12,6 @@ Bientôt disponible...
 ## A ajouter
 
 - boutons pour directement aller sur la page des evaluations/devoirs/absences/mails
+- deplacer la logique des events dans chrome.tabs.onUpdated.addListener (bg.js) pour etre plus optimal et efficace
 
 Extension réalisée en utilisant [create-chrome-ext](https://github.com/guocaoyi/create-chrome-ext)

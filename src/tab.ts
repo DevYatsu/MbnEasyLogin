@@ -49,13 +49,11 @@ export async function changeTabUrlParams(tabId: number, newPlace: keyof PupilsPa
 }
 
 export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries): Promise<{
-  tabId?: number
   connected: boolean
   error?: string
 }> {
   try {
     const { tabId } = await chrome.runtime.sendMessage({ action: 'createTab' })
-    await new Promise((r) => setTimeout(r, 500))
 
     const tabInfo = await chrome.tabs.get(tabId)
     const isLoggedIn =
@@ -64,7 +62,7 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
     await new Promise((r) => setTimeout(r, 500))
 
     if (!isLoggedIn) {
-      chrome.tabs.sendMessage(tabId, {
+      await chrome.tabs.sendMessage(tabId, {
         action: 'profileSelection',
       })
       await new Promise((r) => setTimeout(r, 500))
@@ -73,25 +71,29 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
       const { username } = await chrome.storage.local.get('username')
 
       if (!username || !password) {
+        await chrome.tabs.remove(tabId)
         throw new Error('No username or password set to connect')
       }
+      console.log(password, username)
 
-      chrome.tabs.sendMessage(tabId, {
+      await chrome.tabs.sendMessage(tabId, {
         action: 'authoritySelection',
         password,
         username,
       })
       await new Promise((r) => setTimeout(r, 500))
 
+      console.log(tabInfo)
       const wrongCredentials = tabInfo.url?.startsWith(
         'https://educonnect.education.gouv.fr/idp/profile/SAML2/POST/SSO?execution=',
       )
-
       if (wrongCredentials) {
+        await chrome.tabs.remove(tabId)
         throw new Error('Invalid credentials: change them in the options page!')
       }
+      await new Promise((r) => setTimeout(r, 500))
 
-      chrome.tabs.sendMessage(tabId, {
+      await chrome.tabs.sendMessage(tabId, {
         action: 'success',
       })
       await new Promise((r) => setTimeout(r, 500))
@@ -110,10 +112,12 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
     if (finalTabCategory) {
       await changeTabUrlParams(tabId, finalTabCategory)
     }
+    await chrome.tabs.update(tabId, { selected: true })
 
-    return { tabId, connected: true }
+    return { connected: true }
   } catch (error) {
     console.error(error)
+
     if (error instanceof Error) {
       return { connected: false, error: error.message }
     } else if (typeof error === 'string') {

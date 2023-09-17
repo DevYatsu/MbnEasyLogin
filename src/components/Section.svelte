@@ -12,24 +12,16 @@
   async function handleClick() {
     isLoading = true
     try {
-      const { tabId, connected, error: err } = await connectToMBN()
+      const {  connected, error: err } = await connectToMBN()
 
       isLoading = false
 
       if (connected) {
         buttonText = 'Connected !'
         message = 'Successfully connected'
-
-        if (tabId) {
-          await chrome.tabs.update(tabId, { selected: true })
-        }
       } else {
         buttonText = 'Try again !'
         error = err || 'Something went wrong !'
-
-        if (tabId) {
-          await chrome.tabs.remove(tabId)
-        }
       }
     } catch (e) {
       error = 'Error occurred while connecting' // Handle errors if any

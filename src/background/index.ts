@@ -14,4 +14,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 })
 
+// chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+//   if (changeInfo.url && changeInfo.status != 'loading') {
+//     if (
+//       changeInfo.url === 'https://www.monbureaunumerique.fr/sg.do?PROC=PAGE_ACCUEIL&ACTION=VALIDER'
+//     ) {
+//       const { goToFirstSchoolAutomatically } = await chrome.storage.local.get(
+//         'goToFirstSchoolAutomatically',
+//       )
+
+//       if (goToFirstSchoolAutomatically) {
+//         await chrome.tabs.sendMessage(tabId, {
+//           action: 'redirectOnFirstSchool',
+//         })
+//       }
+//     }
+//   }
+// })
+
 export {}

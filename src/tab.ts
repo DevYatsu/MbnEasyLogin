@@ -54,18 +54,26 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
 }> {
   try {
     const { tabId } = await chrome.runtime.sendMessage({ action: 'createTab' })
+    await new Promise((resolve) => setTimeout(resolve, 500))
+
+    if (!tabId) {
+      throw new Error('Failed to create a new tab')
+    }
 
     const tabInfo = await chrome.tabs.get(tabId)
+
+    if (!tabInfo.url) {
+      return { connected: false, error: 'Tab no longer exists' }
+    }
+
     const isLoggedIn =
       tabInfo.url === 'https://www.monbureaunumerique.fr/sg.do?PROC=PAGE_ACCUEIL&ACTION=VALIDER'
-
-    await new Promise((r) => setTimeout(r, 500))
 
     if (!isLoggedIn) {
       await chrome.tabs.sendMessage(tabId, {
         action: 'profileSelection',
       })
-      await new Promise((r) => setTimeout(r, 500))
+      await new Promise((resolve) => setTimeout(resolve, 500))
 
       const { password } = await chrome.storage.local.get('password')
       const { username } = await chrome.storage.local.get('username')
@@ -74,30 +82,34 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
         await chrome.tabs.remove(tabId)
         throw new Error('No username or password set to connect')
       }
-      console.log(password, username)
 
       await chrome.tabs.sendMessage(tabId, {
         action: 'authoritySelection',
         password,
         username,
       })
-      await new Promise((r) => setTimeout(r, 500))
+      await new Promise((resolve) => setTimeout(resolve, 500))
 
-      console.log(tabInfo)
-      const wrongCredentials = tabInfo.url?.startsWith(
+      const newTabInfo = await chrome.tabs.get(tabId)
+      if (!newTabInfo.url) {
+        return { connected: false, error: 'Tab no longer exists' }
+      }
+
+      const wrongCredentials = newTabInfo.url?.startsWith(
         'https://educonnect.education.gouv.fr/idp/profile/SAML2/POST/SSO?execution=',
       )
       if (wrongCredentials) {
         await chrome.tabs.remove(tabId)
         throw new Error('Invalid credentials: change them in the options page!')
       }
-      await new Promise((r) => setTimeout(r, 500))
+      await new Promise((resolve) => setTimeout(resolve, 500))
 
       await chrome.tabs.sendMessage(tabId, {
         action: 'success',
       })
-      await new Promise((r) => setTimeout(r, 500))
     }
+
+    await new Promise((resolve) => setTimeout(resolve, 500))
 
     const { goToFirstSchoolAutomatically } = await chrome.storage.local.get(
       'goToFirstSchoolAutomatically',
@@ -107,8 +119,9 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
       await chrome.tabs.sendMessage(tabId, {
         action: 'redirectOnFirstSchool',
       })
-    }
 
+      //todo!! error happening here, need to figure it out
+    }
     if (finalTabCategory) {
       await changeTabUrlParams(tabId, finalTabCategory)
     }

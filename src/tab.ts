@@ -61,6 +61,8 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
     const isLoggedIn =
       tabInfo.url === 'https://www.monbureaunumerique.fr/sg.do?PROC=PAGE_ACCUEIL&ACTION=VALIDER'
 
+    await new Promise((r) => setTimeout(r, 500))
+
     if (!isLoggedIn) {
       chrome.tabs.sendMessage(tabId, {
         action: 'profileSelection',
@@ -103,7 +105,6 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
       await chrome.tabs.sendMessage(tabId, {
         action: 'redirectOnFirstSchool',
       })
-      await new Promise((r) => setTimeout(r, 500))
     }
 
     if (finalTabCategory) {

@@ -1,4 +1,4 @@
-# mbnconnexionextension
+# MbnEasyLogin
 
 The following `README.md` is in french as nobody is likely to use this extension except french ppl.
 

@@ -1,9 +1,9 @@
 import { defineManifest } from '@crxjs/vite-plugin'
 
 export default defineManifest({
-  name: 'Mbn EasyConnect',
-  description: 'An extension to easily connect to Mbn',
-  version: '0.0.0',
+  name: 'MbnEasyLogin',
+  description: 'An extension to easily login to Mbn',
+  version: '1.0.0',
   manifest_version: 3,
   icons: {
     '16': 'img/logo-16.png',
@@ -34,7 +34,6 @@ export default defineManifest({
   ],
   permissions: ['tabs', 'activeTab', 'scripting', 'storage'],
   host_permissions: [
-    '*://*/*',
     'https://cas.monbureaunumerique.fr/login?service=https%3A%2F%2Fwww.monbureaunumerique.fr%2Fsg.do%3FPROC%3DIDENTIFICATION_FRONT',
   ],
 })

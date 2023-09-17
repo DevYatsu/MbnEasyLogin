@@ -2,8 +2,6 @@ export function executeScriptOnTab(tabId: number, func: (...arg: any) => void, a
   chrome.scripting.executeScript({ target: { tabId }, func, args }, function () {
     if (chrome.runtime.lastError) {
       console.error(chrome.runtime.lastError)
-    } else {
-      console.log('Script executed successfully on the tab.')
     }
   })
 }
@@ -59,39 +57,31 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
     const { tabId } = await chrome.runtime.sendMessage({ action: 'createTab' })
     await new Promise((r) => setTimeout(r, 500))
 
+    const tabInfo = await chrome.tabs.get(tabId)
     const isLoggedIn =
-      (await chrome.tabs.get(tabId)).url ===
-      'https://www.monbureaunumerique.fr/sg.do?PROC=PAGE_ACCUEIL&ACTION=VALIDER'
+      tabInfo.url === 'https://www.monbureaunumerique.fr/sg.do?PROC=PAGE_ACCUEIL&ACTION=VALIDER'
 
     if (!isLoggedIn) {
-      await chrome.runtime.sendMessage({
+      chrome.tabs.sendMessage(tabId, {
         action: 'profileSelection',
-        tabId,
       })
-
-      await new Promise((r) => setTimeout(r, 1000))
+      await new Promise((r) => setTimeout(r, 500))
 
       const { password } = await chrome.storage.local.get('password')
       const { username } = await chrome.storage.local.get('username')
 
-      console.log(password, username)
-      if (Object.keys(username).length === 0) {
-        throw new Error('No username set to connect')
-      }
-      if (Object.keys(password).length === 0) {
-        throw new Error('No password set to connect')
+      if (!username || !password) {
+        throw new Error('No username or password set to connect')
       }
 
-      await chrome.runtime.sendMessage({
+      chrome.tabs.sendMessage(tabId, {
         action: 'authoritySelection',
-        tabId,
         password,
         username,
       })
+      await new Promise((r) => setTimeout(r, 500))
 
-      await new Promise((r) => setTimeout(r, 700))
-
-      const wrongCredentials = (await chrome.tabs.get(tabId)).url?.startsWith(
+      const wrongCredentials = tabInfo.url?.startsWith(
         'https://educonnect.education.gouv.fr/idp/profile/SAML2/POST/SSO?execution=',
       )
 
@@ -99,24 +89,20 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
         throw new Error('Invalid credentials: change them in the options page!')
       }
 
-      await chrome.runtime.sendMessage({
+      chrome.tabs.sendMessage(tabId, {
         action: 'success',
-        tabId,
       })
+      await new Promise((r) => setTimeout(r, 500))
     }
-
-    await new Promise((r) => setTimeout(r, 700))
 
     const { goToFirstSchoolAutomatically } = await chrome.storage.local.get(
       'goToFirstSchoolAutomatically',
     )
 
     if (goToFirstSchoolAutomatically) {
-      await chrome.runtime.sendMessage({
+      await chrome.tabs.sendMessage(tabId, {
         action: 'redirectOnFirstSchool',
-        tabId,
       })
-
       await new Promise((r) => setTimeout(r, 500))
     }
 
@@ -126,7 +112,7 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
 
     return { tabId, connected: true }
   } catch (error) {
-    console.error('Error creating tab:', error)
+    console.error(error)
     if (error instanceof Error) {
       return { connected: false, error: error.message }
     } else if (typeof error === 'string') {

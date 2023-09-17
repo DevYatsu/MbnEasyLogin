@@ -7,4 +7,10 @@ Construite sur la base d'un script de connexion personnalisé, elle simplifie et
 
 ## Comment l'utiliser ?
 
+Bientôt disponible...
+
+## A ajouter
+
+- boutons pour directement aller sur la page des evaluations/devoirs/absences/mails
+
 Extension réalisée en utilisant [create-chrome-ext](https://github.com/guocaoyi/create-chrome-ext)

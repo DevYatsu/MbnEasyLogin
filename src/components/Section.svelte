@@ -2,6 +2,7 @@
   import { connectToMBN } from '../tab'
   import Button from './Button.svelte'
   import Loader from './Loader.svelte'
+  import OptionsLink from './OptionsLink.svelte'
 
   let error = ''
   let message = ''
@@ -47,9 +48,16 @@
       <h4 class="msg success-msg">{message}</h4>
     {/if}
   </div>
+  <div class="options-wrapper"><OptionsLink /></div>
 {/if}
 
 <style lang="scss">
+  .options-wrapper {
+    font-size: 10px;
+    position: absolute;
+    top: 0px;
+    right: -14px;
+  }
   .flex-wrapper {
     display: flex;
     flex-direction: column;

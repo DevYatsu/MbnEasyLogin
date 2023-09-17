@@ -74,6 +74,7 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
       const { password } = await chrome.storage.local.get('password')
       const { username } = await chrome.storage.local.get('username')
 
+      console.log(password, username)
       if (Object.keys(username).length === 0) {
         throw new Error('No username set to connect')
       }

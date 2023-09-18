@@ -53,8 +53,15 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
   error?: string
 }> {
   try {
+    const { password } = await chrome.storage.local.get('password')
+    const { username } = await chrome.storage.local.get('username')
+
+    if (!username || !password) {
+      throw new Error('No username or password set to connect')
+    }
+
     const { tabId } = await chrome.runtime.sendMessage({ action: 'createTab' })
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
 
     if (!tabId) {
       throw new Error('Failed to create a new tab')
@@ -73,22 +80,14 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
       await chrome.tabs.sendMessage(tabId, {
         action: 'profileSelection',
       })
-      await new Promise((resolve) => setTimeout(resolve, 500))
-
-      const { password } = await chrome.storage.local.get('password')
-      const { username } = await chrome.storage.local.get('username')
-
-      if (!username || !password) {
-        await chrome.tabs.remove(tabId)
-        throw new Error('No username or password set to connect')
-      }
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
       await chrome.tabs.sendMessage(tabId, {
         action: 'authoritySelection',
         password,
         username,
       })
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
       const newTabInfo = await chrome.tabs.get(tabId)
       if (!newTabInfo.url) {
@@ -102,14 +101,14 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
         await chrome.tabs.remove(tabId)
         throw new Error('Invalid credentials: change them in the options page!')
       }
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
       await chrome.tabs.sendMessage(tabId, {
         action: 'success',
       })
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 700))
 
     const { goToFirstSchoolAutomatically } = await chrome.storage.local.get(
       'goToFirstSchoolAutomatically',

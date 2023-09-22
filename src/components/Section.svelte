@@ -12,14 +12,12 @@
   async function handleClick() {
     isLoading = true
     try {
-      const { tabId } = await createNewTab()
+      await createNewTab()
 
-      if (!tabId) {
-        throw new Error('Failed to create a new Tab')
-      }
+      return
 
-      const { connected, error: err } = await connectToMBN(tabId)
-
+      const { connected, error: err } = { connected: false, error: 'error str' }
+      // await connectToMBN(tabId)
       isLoading = false
 
       if (connected) {

@@ -22,7 +22,7 @@ export default defineManifest({
   content_scripts: [
     {
       matches: [
-        'https://cas.monbureaunumerique.fr/login?service=https%3A%2F%2Fwww.monbureaunumerique.fr%2Fsg.do%3FPROC%3DIDENTIFICATION_FRONT',
+        'https://cas.monbureaunumerique.fr/login*',
         'https://educonnect.education.gouv.fr/idp/profile/SAML2/POST/SSO?execution=*',
         'https://www.monbureaunumerique.fr/sg.do?*',
       ],
@@ -35,7 +35,7 @@ export default defineManifest({
       matches: [],
     },
   ],
-  permissions: ['tabs', 'activeTab', 'scripting', 'storage'],
+  permissions: ['tabs', 'activeTab', 'scripting', 'storage', 'webNavigation'],
   host_permissions: [
     'https://cas.monbureaunumerique.fr/login?service=https%3A%2F%2Fwww.monbureaunumerique.fr%2Fsg.do%3FPROC%3DIDENTIFICATION_FRONT',
     'https://educonnect.education.gouv.fr/idp/profile/SAML2/POST/SSO?execution=*',

@@ -63,30 +63,28 @@ export async function connectToMBN(
       throw new Error('No username or password set to connect')
     }
 
-    chrome.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
-      console.log(tab.url)
-      if (tabId !== extensionGeneratedTabId) {
-        return
-      }
-
-      if (changeInfo.status === 'complete') {
-        console.log(tab)
+    chrome.webNavigation.onCompleted.addListener(async (details) => {
+      console.log(details)
+      if (details.frameId === 0 && details.tabId) {
+        if (details.tabId !== extensionGeneratedTabId) {
+          return
+        }
 
         if (
-          tab.url ===
+          details.url ===
           'https://cas.monbureaunumerique.fr/login?service=https%3A%2F%2Fwww.monbureaunumerique.fr%2Fsg.do%3FPROC%3DIDENTIFICATION_FRONT'
         ) {
-          await chrome.tabs.sendMessage(tabId, {
+          await chrome.tabs.sendMessage(extensionGeneratedTabId, {
             action: 'profileSelection',
           })
         }
 
         if (
-          tab.url?.startsWith(
+          details.url.startsWith(
             'https://educonnect.education.gouv.fr/idp/profile/SAML2/POST/SSO?execution',
           )
         ) {
-          await chrome.tabs.sendMessage(tabId, {
+          await chrome.tabs.sendMessage(extensionGeneratedTabId, {
             action: 'authoritySelection',
             password,
             username,
@@ -94,7 +92,7 @@ export async function connectToMBN(
         }
 
         if (
-          tab.url === 'https://www.monbureaunumerique.fr/sg.do?PROC=PAGE_ACCUEIL&ACTION=VALIDER'
+          details.url === 'https://www.monbureaunumerique.fr/sg.do?PROC=PAGE_ACCUEIL&ACTION=VALIDER'
         ) {
           // logged in
           const { goToFirstSchoolAutomatically } = await chrome.storage.local.get(
@@ -102,20 +100,20 @@ export async function connectToMBN(
           )
 
           if (goToFirstSchoolAutomatically) {
-            await chrome.tabs.sendMessage(tabId, {
+            await chrome.tabs.sendMessage(extensionGeneratedTabId, {
               action: 'redirectOnFirstSchool',
             })
 
             //todo!! error happening here, need to figure it out
           }
           if (finalTabCategory) {
-            await changeTabUrlParams(tabId, finalTabCategory)
+            await changeTabUrlParams(extensionGeneratedTabId, finalTabCategory)
           }
-          await chrome.tabs.update(tabId, { selected: true })
+          await chrome.tabs.update(extensionGeneratedTabId, { selected: true })
         }
 
-        if (tab.url === 'https://cas.monbureaunumerique.fr/saml/SAMLAssertionConsumer') {
-          await chrome.tabs.sendMessage(tabId, {
+        if (details.url === 'https://cas.monbureaunumerique.fr/saml/SAMLAssertionConsumer') {
+          await chrome.tabs.sendMessage(extensionGeneratedTabId, {
             action: 'success',
           })
         }
@@ -138,11 +136,18 @@ export async function connectToMBN(
   }
 }
 
-export async function createNewTab(): Promise<{ tabId: number | undefined }> {
-  const { id: tabId } = await chrome.tabs.create({
-    active: false,
-    url: 'https://cas.monbureaunumerique.fr/login?service=https%3A%2F%2Fwww.monbureaunumerique.fr%2Fsg.do%3FPROC%3DIDENTIFICATION_FRONT',
-  })
-
-  return { tabId }
+export async function createNewTab(): Promise<void> {
+  chrome.tabs.create(
+    {
+      active: false,
+      url: 'https://cas.monbureaunumerique.fr/login?service=https%3A%2F%2Fwww.monbureaunumerique.fr%2Fsg.do%3FPROC%3DIDENTIFICATION_FRONT',
+    },
+    (tab) => {
+      console.log(tab)
+      if (tab.id) {
+        chrome.tabs.sendMessage(tab.id, { extensionTab: true })
+        chrome.tabs.update(tab.id, { selected: true })
+      }
+    },
+  )
 }

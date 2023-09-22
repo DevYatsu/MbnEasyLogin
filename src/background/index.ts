@@ -1,13 +1,10 @@
+import { IsScriptRunner as isRunner } from '../utils'
+
 chrome.runtime.onMessage.addListener((msg, messageSender, sendReply) => {
-  console.log(messageSender)
   if (msg.action === 'requestCredentials') {
     ;(async () => {
       const { username, password } = await chrome.storage.local.get()
-
-      if (!username || !password) {
-        // todo! create an error here
-        return
-      }
+      // username and password defined for sure
 
       sendReply({ username, password })
     })()
@@ -20,6 +17,16 @@ chrome.runtime.onMessage.addListener((msg, messageSender, sendReply) => {
       const { goToFirstSchoolAutomatically } = await chrome.storage.local.get()
 
       sendReply({ goToFirstSchoolAutomatically: !!goToFirstSchoolAutomatically })
+    })()
+
+    return true
+  }
+
+  if (msg.action === 'requestIsScriptRunner') {
+    ;(async () => {
+      const isScriptRunner = await isRunner()
+
+      sendReply({ isScriptRunner })
     })()
 
     return true

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { connectToMBN, createNewTab } from '../tab'
+  import { checkCredentials, createNewTab, setIsScriptRunner } from '../utils'
   import Button from './Button.svelte'
   import Loader from './Loader.svelte'
   import OptionsLink from './OptionsLink.svelte'
@@ -12,23 +12,20 @@
   async function handleClick() {
     isLoading = true
     try {
+      await setIsScriptRunner()
+      await checkCredentials()
       await createNewTab()
 
-      return
-
-      const { connected, error: err } = { connected: false, error: 'error str' }
-      // await connectToMBN(tabId)
-      isLoading = false
-
-      if (connected) {
-        buttonText = 'Connected !'
-        message = 'Successfully connected'
-      } else {
-        buttonText = 'Try again !'
-        error = err || 'Something went wrong !'
-      }
+      // todo!! still need to add support for going to any place in the website we want through a button
+      /*
+      if (finalTabCategory) {
+            await changeTabUrlParams(extensionGeneratedTabId, finalTabCategory)
+          } */
     } catch (e) {
-      error = 'Error occurred while connecting to MBN' // Handle errors if any
+      error = e as string
+    } finally {
+      await chrome.storage.session.clear()
+      isLoading = false
     }
   }
 </script>

@@ -48,31 +48,19 @@ export async function changeTabUrlParams(tabId: number, newPlace: keyof PupilsPa
   }
 }
 
-export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries): Promise<{
+export async function connectToMBN(
+  extensionGeneratedTabId: number,
+  finalTabCategory?: keyof PupilsPagesQueries,
+): Promise<{
   connected: boolean
   error?: string
 }> {
-  const { id: extensionGeneratedTabId } = await chrome.tabs.create({
-    active: false,
-    url: 'https://cas.monbureaunumerique.fr/login?service=https%3A%2F%2Fwww.monbureaunumerique.fr%2Fsg.do%3FPROC%3DIDENTIFICATION_FRONT',
-  })
-
-  if (!extensionGeneratedTabId) {
-    return { connected: false, error: 'Failed to generate new Tab' }
-  }
-
   try {
     const { password } = await chrome.storage.local.get('password')
     const { username } = await chrome.storage.local.get('username')
 
     if (!username || !password) {
       throw new Error('No username or password set to connect')
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 3000))
-
-    if (!extensionGeneratedTabId) {
-      throw new Error('Failed to create a new tab')
     }
 
     chrome.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
@@ -148,4 +136,13 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
       return { connected: false, error: error as string }
     }
   }
+}
+
+export async function createNewTab(): Promise<{ tabId: number | undefined }> {
+  const { id: tabId } = await chrome.tabs.create({
+    active: false,
+    url: 'https://cas.monbureaunumerique.fr/login?service=https%3A%2F%2Fwww.monbureaunumerique.fr%2Fsg.do%3FPROC%3DIDENTIFICATION_FRONT',
+  })
+
+  return { tabId }
 }

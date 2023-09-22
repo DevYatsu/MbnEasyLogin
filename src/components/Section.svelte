@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { connectToMBN } from '../tab'
+  import { connectToMBN, createNewTab } from '../tab'
   import Button from './Button.svelte'
   import Loader from './Loader.svelte'
   import OptionsLink from './OptionsLink.svelte'
@@ -12,7 +12,13 @@
   async function handleClick() {
     isLoading = true
     try {
-      const { connected, error: err } = await connectToMBN()
+      const { tabId } = await createNewTab()
+
+      if (!tabId) {
+        throw new Error('Failed to create a new Tab')
+      }
+
+      const { connected, error: err } = await connectToMBN(tabId)
 
       isLoading = false
 

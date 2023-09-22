@@ -21,7 +21,11 @@ export default defineManifest({
   },
   content_scripts: [
     {
-      matches: ['http://*/*', 'https://*/*'],
+      matches: [
+        'https://cas.monbureaunumerique.fr/login?service=https%3A%2F%2Fwww.monbureaunumerique.fr%2Fsg.do%3FPROC%3DIDENTIFICATION_FRONT',
+        'https://educonnect.education.gouv.fr/idp/profile/SAML2/POST/SSO?execution=*',
+        'https://www.monbureaunumerique.fr/sg.do?*',
+      ],
       js: ['src/content/index.ts'],
     },
   ],

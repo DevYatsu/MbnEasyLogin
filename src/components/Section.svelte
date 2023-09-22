@@ -12,7 +12,7 @@
   async function handleClick() {
     isLoading = true
     try {
-      const {  connected, error: err } = await connectToMBN()
+      const { connected, error: err } = await connectToMBN()
 
       isLoading = false
 
@@ -24,7 +24,7 @@
         error = err || 'Something went wrong !'
       }
     } catch (e) {
-      error = 'Error occurred while connecting' // Handle errors if any
+      error = 'Error occurred while connecting to MBN' // Handle errors if any
     }
   }
 </script>

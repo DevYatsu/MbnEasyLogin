@@ -52,6 +52,15 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
   connected: boolean
   error?: string
 }> {
+  const { id: extensionGeneratedTabId } = await chrome.tabs.create({
+    active: false,
+    url: 'https://cas.monbureaunumerique.fr/login?service=https%3A%2F%2Fwww.monbureaunumerique.fr%2Fsg.do%3FPROC%3DIDENTIFICATION_FRONT',
+  })
+
+  if (!extensionGeneratedTabId) {
+    return { connected: false, error: 'Failed to generate new Tab' }
+  }
+
   try {
     const { password } = await chrome.storage.local.get('password')
     const { username } = await chrome.storage.local.get('username')
@@ -60,75 +69,76 @@ export async function connectToMBN(finalTabCategory?: keyof PupilsPagesQueries):
       throw new Error('No username or password set to connect')
     }
 
-    const { tabId } = await chrome.runtime.sendMessage({ action: 'createTab' })
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 3000))
 
-    if (!tabId) {
+    if (!extensionGeneratedTabId) {
       throw new Error('Failed to create a new tab')
     }
 
-    const tabInfo = await chrome.tabs.get(tabId)
-
-    if (!tabInfo.url) {
-      return { connected: false, error: 'Tab no longer exists' }
-    }
-
-    const isLoggedIn =
-      tabInfo.url === 'https://www.monbureaunumerique.fr/sg.do?PROC=PAGE_ACCUEIL&ACTION=VALIDER'
-
-    if (!isLoggedIn) {
-      await chrome.tabs.sendMessage(tabId, {
-        action: 'profileSelection',
-      })
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      await chrome.tabs.sendMessage(tabId, {
-        action: 'authoritySelection',
-        password,
-        username,
-      })
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      const newTabInfo = await chrome.tabs.get(tabId)
-      if (!newTabInfo.url) {
-        return { connected: false, error: 'Tab no longer exists' }
+    chrome.tabs.onUpdated.addListener(async function (tabId, changeInfo, tab) {
+      console.log(tab.url)
+      if (tabId !== extensionGeneratedTabId) {
+        return
       }
 
-      const wrongCredentials = newTabInfo.url?.startsWith(
-        'https://educonnect.education.gouv.fr/idp/profile/SAML2/POST/SSO?execution=',
-      )
-      if (wrongCredentials) {
-        await chrome.tabs.remove(tabId)
-        throw new Error('Invalid credentials: change them in the options page!')
+      if (changeInfo.status === 'complete') {
+        console.log(tab)
+
+        if (
+          tab.url ===
+          'https://cas.monbureaunumerique.fr/login?service=https%3A%2F%2Fwww.monbureaunumerique.fr%2Fsg.do%3FPROC%3DIDENTIFICATION_FRONT'
+        ) {
+          await chrome.tabs.sendMessage(tabId, {
+            action: 'profileSelection',
+          })
+        }
+
+        if (
+          tab.url?.startsWith(
+            'https://educonnect.education.gouv.fr/idp/profile/SAML2/POST/SSO?execution',
+          )
+        ) {
+          await chrome.tabs.sendMessage(tabId, {
+            action: 'authoritySelection',
+            password,
+            username,
+          })
+        }
+
+        if (
+          tab.url === 'https://www.monbureaunumerique.fr/sg.do?PROC=PAGE_ACCUEIL&ACTION=VALIDER'
+        ) {
+          // logged in
+          const { goToFirstSchoolAutomatically } = await chrome.storage.local.get(
+            'goToFirstSchoolAutomatically',
+          )
+
+          if (goToFirstSchoolAutomatically) {
+            await chrome.tabs.sendMessage(tabId, {
+              action: 'redirectOnFirstSchool',
+            })
+
+            //todo!! error happening here, need to figure it out
+          }
+          if (finalTabCategory) {
+            await changeTabUrlParams(tabId, finalTabCategory)
+          }
+          await chrome.tabs.update(tabId, { selected: true })
+        }
+
+        if (tab.url === 'https://cas.monbureaunumerique.fr/saml/SAMLAssertionConsumer') {
+          await chrome.tabs.sendMessage(tabId, {
+            action: 'success',
+          })
+        }
       }
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      await chrome.tabs.sendMessage(tabId, {
-        action: 'success',
-      })
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 700))
-
-    const { goToFirstSchoolAutomatically } = await chrome.storage.local.get(
-      'goToFirstSchoolAutomatically',
-    )
-
-    if (goToFirstSchoolAutomatically) {
-      await chrome.tabs.sendMessage(tabId, {
-        action: 'redirectOnFirstSchool',
-      })
-
-      //todo!! error happening here, need to figure it out
-    }
-    if (finalTabCategory) {
-      await changeTabUrlParams(tabId, finalTabCategory)
-    }
-    await chrome.tabs.update(tabId, { selected: true })
+    })
 
     return { connected: true }
   } catch (error) {
     console.error(error)
+
+    await chrome.tabs.remove(extensionGeneratedTabId)
 
     if (error instanceof Error) {
       return { connected: false, error: error.message }

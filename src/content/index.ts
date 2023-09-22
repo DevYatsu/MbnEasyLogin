@@ -1,4 +1,4 @@
-chrome.runtime.onMessage.addListener((request) => {
+chrome.runtime.onMessage.addListener(async (request) => {
   if (request.action === 'profileSelection') {
     // Check if the current URL matches the login page URL
     if (

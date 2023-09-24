@@ -1,11 +1,3 @@
-export function executeScriptOnTab(tabId: number, func: (...arg: any) => void, args?: any[]) {
-  chrome.scripting.executeScript({ target: { tabId }, func, args }, function () {
-    if (chrome.runtime.lastError) {
-      console.error(chrome.runtime.lastError)
-    }
-  })
-}
-
 export function updateTabURL(tabId: number, newUrl: string) {
   chrome.tabs.update(tabId, { url: newUrl }, function (updatedTab) {
     if (chrome.runtime.lastError) {
@@ -56,8 +48,15 @@ export async function createNewTab(): Promise<void> {
 }
 
 export async function checkCredentials(): Promise<void> {
-  const { password } = await chrome.storage.local.get('password')
-  const { username } = await chrome.storage.local.get('username')
+  const { password, username, credentialsError } = (await chrome.storage.local.get()) as {
+    password: string | undefined
+    username: string | undefined
+    credentialsError: true | undefined
+  }
+
+  if (credentialsError) {
+    return Promise.reject(new Error('Invalid password or username'))
+  }
 
   if (!username || !password) {
     return Promise.reject(new Error('No username or password set to connect'))
@@ -67,17 +66,18 @@ export async function checkCredentials(): Promise<void> {
 export async function setIsScriptRunner() {
   await chrome.storage.session.set({ isScriptRunner: true })
 }
-
 export async function IsScriptRunner(): Promise<boolean> {
   const { isScriptRunner } = await chrome.storage.session.get()
 
   return !!isScriptRunner
 }
+export async function clearScriptRunner() {
+  await chrome.storage.session.remove('isScriptRunner')
+}
 
-export async function clearScriptRunner(): Promise<void> {
-  try {
-    await chrome.storage.session.remove('isScriptRunner')
-  } catch (e) {
-    console.error(e)
-  }
+export async function setCrendentialsError() {
+  await chrome.storage.local.set({ credentialsError: true })
+
+  // after setting a credentials error the error can
+  // only be removed when credentials are changed in options page
 }

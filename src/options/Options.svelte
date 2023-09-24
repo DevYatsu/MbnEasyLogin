@@ -15,6 +15,7 @@
     initialValues,
     onSubmit: async (values) => {
       await chrome.storage.local.set(values)
+      await chrome.storage.local.remove('credentialsError')
 
       isSubmitted = true
     },

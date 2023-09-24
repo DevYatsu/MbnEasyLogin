@@ -28,7 +28,7 @@
       if (
         !document.referrer.startsWith(
           'https://educonnect.education.gouv.fr/idp/profile/SAML2/POST/SSO?execution=',
-        )
+        ) // check if the page is not reload because password did not work
       ) {
         document.getElementById('bouton_eleve')?.click()
 
@@ -44,19 +44,27 @@
         }
 
         document.getElementById('bouton_valider')?.click()
-
-        await chrome.runtime.sendMessage({
-          action: 'clearScriptRunner',
-        })
+      } else {
+        if (
+          document.getElementById('erreurIdentifiant')?.getAttribute('hidden') === 'false' ||
+          document.getElementById('erreurMdp')?.getAttribute('hidden') === 'false'
+        ) {
+          // it means password or/and id is wrong
+          await chrome.runtime.sendMessage({
+            action: 'setCredentialsError',
+          })
+        }
       }
     }
 
     if (url === 'https://cas.monbureaunumerique.fr/saml/SAMLAssertionConsumer') {
-      ;(
-        document.querySelector(
-          'div.msg__content > p:nth-child(4) > strong > a',
-        )! as HTMLAnchorElement
-      ).click()
+      if (document.querySelector('div.msg__content > p:nth-child(4) > strong > a')) {
+        ;(
+          document.querySelector(
+            'div.msg__content > p:nth-child(4) > strong > a',
+          )! as HTMLAnchorElement
+        ).click()
+      }
     }
 
     // when arrived on the main app redirect to the first school in school list, which is certainly the school you go to

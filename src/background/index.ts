@@ -1,4 +1,4 @@
-import { clearScriptRunner, IsScriptRunner as isRunner } from '../utils'
+import { clearScriptRunner, IsScriptRunner, setCrendentialsError } from '../utils'
 
 chrome.runtime.onMessage.addListener((msg, messageSender, sendReply) => {
   if (msg.action === 'requestCredentials') {
@@ -12,9 +12,18 @@ chrome.runtime.onMessage.addListener((msg, messageSender, sendReply) => {
     return true
   }
 
+  if (msg.action === 'setCredentialsError') {
+    ;(async () => {
+      await setCrendentialsError()
+      await clearScriptRunner()
+    })()
+  }
+
   if (msg.action === 'requestGoingOnFirstSchool') {
     ;(async () => {
       const { goToFirstSchoolAutomatically } = await chrome.storage.local.get()
+
+      await clearScriptRunner()
 
       sendReply({ goToFirstSchoolAutomatically: !!goToFirstSchoolAutomatically })
     })()
@@ -24,7 +33,9 @@ chrome.runtime.onMessage.addListener((msg, messageSender, sendReply) => {
 
   if (msg.action === 'requestIsScriptRunner') {
     ;(async () => {
-      const isScriptRunner = await isRunner()
+      const isScriptRunner = await IsScriptRunner()
+
+      // true if script is ran by the extension
 
       sendReply({ isScriptRunner })
     })()

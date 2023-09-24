@@ -21,8 +21,6 @@
       if (finalTabCategory) {
             await changeTabUrlParams(extensionGeneratedTabId, finalTabCategory)
           } */
-
-      await clearScriptRunner()
     } catch (e) {
       error = e as string
     } finally {

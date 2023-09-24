@@ -44,6 +44,10 @@
         }
 
         document.getElementById('bouton_valider')?.click()
+
+        await chrome.runtime.sendMessage({
+          action: 'clearScriptRunner',
+        })
       }
     }
 

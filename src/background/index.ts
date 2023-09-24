@@ -1,4 +1,4 @@
-import { IsScriptRunner as isRunner } from '../utils'
+import { clearScriptRunner, IsScriptRunner as isRunner } from '../utils'
 
 chrome.runtime.onMessage.addListener((msg, messageSender, sendReply) => {
   if (msg.action === 'requestCredentials') {
@@ -30,6 +30,12 @@ chrome.runtime.onMessage.addListener((msg, messageSender, sendReply) => {
     })()
 
     return true
+  }
+
+  if (msg.action === 'clearScriptRunner') {
+    ;(async () => {
+      await clearScriptRunner()
+    })()
   }
 })
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { checkCredentials, createNewTab, setIsScriptRunner } from '../utils'
+  import { checkCredentials, clearScriptRunner, createNewTab, setIsScriptRunner } from '../utils'
   import Button from './Button.svelte'
   import Loader from './Loader.svelte'
   import OptionsLink from './OptionsLink.svelte'
@@ -21,10 +21,11 @@
       if (finalTabCategory) {
             await changeTabUrlParams(extensionGeneratedTabId, finalTabCategory)
           } */
+
+      await clearScriptRunner()
     } catch (e) {
       error = e as string
     } finally {
-      await chrome.storage.session.clear()
       isLoading = false
     }
   }

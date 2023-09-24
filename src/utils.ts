@@ -69,7 +69,15 @@ export async function setIsScriptRunner() {
 }
 
 export async function IsScriptRunner(): Promise<boolean> {
-  const { isScriptRunner } = await chrome.storage.session.get('isScriptRunner')
+  const { isScriptRunner } = await chrome.storage.session.get()
 
   return !!isScriptRunner
+}
+
+export async function clearScriptRunner(): Promise<void> {
+  try {
+    await chrome.storage.session.remove('isScriptRunner')
+  } catch (e) {
+    console.error(e)
+  }
 }

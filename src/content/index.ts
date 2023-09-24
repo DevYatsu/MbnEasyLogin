@@ -1,6 +1,7 @@
 ;(async () => {
   const { isScriptRunner } = await chrome.runtime.sendMessage({
     action: 'requestIsScriptRunner',
+    // should be true if the script is run on call of the extension and not when the user goes on the website
   })
 
   if (isScriptRunner) {

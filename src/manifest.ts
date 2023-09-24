@@ -35,7 +35,7 @@ export default defineManifest({
       matches: [],
     },
   ],
-  permissions: ['tabs', 'activeTab', 'scripting', 'storage', 'webNavigation'],
+  permissions: ['tabs', 'activeTab', 'storage'],
   host_permissions: [
     'https://cas.monbureaunumerique.fr/login?service=https%3A%2F%2Fwww.monbureaunumerique.fr%2Fsg.do%3FPROC%3DIDENTIFICATION_FRONT',
     'https://educonnect.education.gouv.fr/idp/profile/SAML2/POST/SSO?execution=*',

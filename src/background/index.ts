@@ -1,52 +1,54 @@
 import { clearScriptRunner, IsScriptRunner, setCrendentialsError } from '../utils'
 
 chrome.runtime.onMessage.addListener((msg, messageSender, sendReply) => {
-  if (msg.action === 'requestCredentials') {
-    ;(async () => {
-      const { username, password } = await chrome.storage.local.get()
-      // username and password defined for sure
+  switch (msg.action) {
+    case 'requestCredentials': {
+      ;(async () => {
+        const { username, password } = await chrome.storage.local.get()
+        // username and password defined for sure
 
-      sendReply({ username, password })
-    })()
+        sendReply({ username, password })
+      })()
 
-    return true
-  }
+      return true
+    }
 
-  if (msg.action === 'setCredentialsError') {
-    ;(async () => {
-      await setCrendentialsError()
-      await clearScriptRunner()
-    })()
-  }
+    case 'setCredentialsError': {
+      ;(async () => {
+        await setCrendentialsError()
+        await clearScriptRunner()
+      })()
+    }
 
-  if (msg.action === 'requestGoingOnFirstSchool') {
-    ;(async () => {
-      const { goToFirstSchoolAutomatically } = await chrome.storage.local.get()
+    case 'requestGoingOnFirstSchool': {
+      ;(async () => {
+        const { goToFirstSchoolAutomatically } = await chrome.storage.local.get()
 
-      await clearScriptRunner()
+        await clearScriptRunner()
 
-      sendReply({ goToFirstSchoolAutomatically: !!goToFirstSchoolAutomatically })
-    })()
+        sendReply({ goToFirstSchoolAutomatically: !!goToFirstSchoolAutomatically })
+      })()
 
-    return true
-  }
+      return true
+    }
 
-  if (msg.action === 'requestIsScriptRunner') {
-    ;(async () => {
-      const isScriptRunner = await IsScriptRunner()
+    case 'requestIsScriptRunner': {
+      ;(async () => {
+        const isScriptRunner = await IsScriptRunner()
 
-      // true if script is ran by the extension
+        // true if script is ran by the extension
 
-      sendReply({ isScriptRunner })
-    })()
+        sendReply({ isScriptRunner })
+      })()
 
-    return true
-  }
+      return true
+    }
 
-  if (msg.action === 'clearScriptRunner') {
-    ;(async () => {
-      await clearScriptRunner()
-    })()
+    case 'clearScriptRunner': {
+      ;(async () => {
+        await clearScriptRunner()
+      })()
+    }
   }
 })
 

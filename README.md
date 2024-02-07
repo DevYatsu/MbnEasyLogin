@@ -7,6 +7,8 @@ Construite sur la base d'un script de connexion personnalisé, elle simplifie et
 
 ## Comment l'utiliser ?
 
-[Rendez-vous ici](https://github.com/DevYatsu/MbnEasyLogin/releases/tag/1.0.0)
+[Simplement, rendez-vous ici](https://github.com/DevYatsu/MbnEasyLogin/releases/tag/1.0.0)
+
+Après avoir créé l'extension j'ai remarqué qu'il existe une autre extension qui fait plus ou moins la même chose, si vous êtes intéressés c'est [ici](https://github.com/mateo08c/ENTAutoConnect).
 
 Extension réalisée en utilisant [create-chrome-ext](https://github.com/guocaoyi/create-chrome-ext)

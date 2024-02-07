@@ -35,7 +35,6 @@ chrome.runtime.onMessage.addListener((msg, messageSender, sendReply) => {
     case 'requestIsScriptRunner': {
       ;(async () => {
         const isScriptRunner = await IsScriptRunner()
-
         // true if script is ran by the extension
 
         sendReply({ isScriptRunner })

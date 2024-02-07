@@ -2,8 +2,7 @@
 
 The following `README.md` is in french as nobody is likely to use this extension except french ppl.
 
-Rationalisez votre expérience avec Mon Bureau Numérique (MBN) grâce à cette extension Chrome.
-Construite sur la base d'un script de connexion personnalisé, elle simplifie et améliore vos interactions avec MBN, rendant les tâches plus efficaces et plus conviviales.
+Facilitez l'accès à Mon Bureau Numérique avec notre extension. Plus besoin de saisir votre nom d'utilisateur et votre mot de passe à chaque connexion. Connectez-vous rapidement et en toute sécurité!
 
 ## Comment l'utiliser ?
 

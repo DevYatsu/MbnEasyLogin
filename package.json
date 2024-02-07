@@ -1,6 +1,6 @@
 {
-  "name": "mbnconnexionextension",
-  "version": "0.0.0",
+  "name": "mbn_easy_login",
+  "version": "1.0.2",
   "author": "yatsu",
   "description": "",
   "type": "module",
@@ -20,7 +20,9 @@
     "preview": "vite preview",
     "fmt": "prettier --write '**/*.{svelte,ts,json,css,scss,md}'"
   },
-  "dependencies": { "svelte-forms-lib": "^2.0.1" },
+  "dependencies": {
+    "svelte-forms-lib": "^2.0.1"
+  },
   "devDependencies": {
     "@crxjs/vite-plugin": "^1.0.12",
     "@types/chrome": "^0.0.236",

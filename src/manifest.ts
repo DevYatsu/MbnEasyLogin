@@ -23,6 +23,7 @@ export default defineManifest({
     {
       matches: [
         'https://cas.monbureaunumerique.fr/login*',
+        'https://cas.monbureaunumerique.fr/saml/SAMLAssertionConsumer',
         'https://educonnect.education.gouv.fr/idp/profile/SAML2/POST/SSO?execution=*',
         'https://www.monbureaunumerique.fr/sg.do?*',
       ],

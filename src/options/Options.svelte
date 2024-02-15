@@ -15,9 +15,9 @@
   const { form, errors, handleChange, handleSubmit } = createForm({
     initialValues,
     onSubmit: async (values) => {
-      values.password = encrypt(values.password)
-      values.username = encrypt(values.username)
-      
+      values.password = await encrypt(values.password.trim())
+      values.username = await encrypt(values.username.trim())
+
       await chrome.storage.local.set(values)
       await chrome.storage.local.remove('credentialsError')
 

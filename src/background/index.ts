@@ -5,11 +5,16 @@ chrome.runtime.onMessage.addListener((msg, messageSender, sendReply) => {
   switch (msg.action) {
     case 'requestCredentials': {
       ;(async () => {
-        const { hashedUsername, hashedPassword } = await chrome.storage.local.get()
-        // username and password defined for sure
+        const { username: hashedUsername, password: hashedPassword } =
+          await chrome.storage.local.get(['password', 'username'])
+        // username and password must necessarily be defined
 
-        const username = decrypt(hashedUsername)
-        const password = decrypt(hashedPassword)
+        if (!hashedUsername || !hashedPassword) {
+          throw new Error('Credentials are not defined!')
+        }
+
+        const username = await decrypt(hashedUsername)
+        const password = await decrypt(hashedPassword)
 
         sendReply({ username, password })
       })()

@@ -12,6 +12,7 @@
   async function handleClick() {
     isLoading = true
     try {
+      
       await setIsScriptRunner()
       await checkCredentials()
       await createNewTab()

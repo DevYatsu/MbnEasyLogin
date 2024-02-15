@@ -64,6 +64,12 @@ chrome.runtime.onInstalled.addListener(async function (details) {
   if (details.reason === 'install') {
     const key = generate_key()
     await chrome.storage.local.set({ key })
+
+    if (chrome.runtime.openOptionsPage) {
+      chrome.runtime.openOptionsPage()
+    } else {
+      window.open(chrome.runtime.getURL('options.html'))
+    }
   }
 })
 

@@ -24,14 +24,14 @@
       isSubmitted = true
     },
     validate: (values) => {
-      let errs = {}
+      let errors = {}
       if (values.username === '') {
-        errs['username'] = 'Username is required'
+        errors['username'] = 'Username is required'
       }
       if (values.password === '') {
-        errs['password'] = 'Password is required'
+        errors['password'] = 'Password is required'
       }
-      return errs
+      return errors
     },
   })
 
@@ -50,10 +50,10 @@
       <div class="input-container">
         <div class="input-content">
           <div class="input-dist">
-            <span id="title">Options</span>
+            <span id="title">MbnEasyLogin Options</span>
             <div class="input-type">
               <input
-                placeholder="Username"
+                placeholder="Nom d'utilisateur"
                 required=""
                 type="text"
                 class="input-is"
@@ -66,7 +66,7 @@
               {/if}
               <input
                 name="password"
-                placeholder="Password"
+                placeholder="Mot de Passe"
                 required=""
                 type="password"
                 class="input-is"
@@ -82,18 +82,18 @@
                   on:change={handleChange}
                   name="goToFirstSchoolAutomatically"
                   bind:checked={$form.goToFirstSchoolAutomatically}
-                  placeholder="Directly redirect to first school in schools list"
+                  placeholder="Se rediriger directement dans la première école parmi la liste des écoles disponibles"
                 />
               </div>
             </div>
 
             <div class="subTxt-container">
               <span class="subTxt"
-                >FYI: sensitive infos are safely stored in the chrome storage and cannot be leaked</span
+                >Les informations sensibles sont stockées en toute sécurité dans le stockage de Chrome et ne peuvent en aucun cas être divulguées</span
               >
             </div>
 
-            <button>Submit</button>
+            <button>Soumettre</button>
           </div>
         </div>
       </div>

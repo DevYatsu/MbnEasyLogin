@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { checkCredentials, clearScriptRunner, createNewTab, setIsScriptRunner } from '../utils'
+  import { checkCredentials, createNewTab, setIsScriptRunner } from '../utils'
   import Button from './Button.svelte'
   import Loader from './Loader.svelte'
   import OptionsLink from './OptionsLink.svelte'

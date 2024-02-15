@@ -7,14 +7,13 @@
   let error = ''
   let message = ''
   let isLoading = false
-  let buttonText = 'Connect'
+  let buttonText = 'Se connecter'
 
   async function handleClick() {
-    isLoading = true
     try {
-
       await setIsScriptRunner()
       await checkCredentials()
+      isLoading = true
       await createNewTab()
 
       // todo!! still need to add support for going to any place in the website we want through a button
@@ -23,7 +22,7 @@
             await changeTabUrlParams(extensionGeneratedTabId, finalTabCategory)
           } */
     } catch (e) {
-      error = e as string
+      error = (e as string)
     } finally {
       isLoading = false
     }
@@ -33,38 +32,13 @@
 {#if isLoading}
   <Loader />
 {:else}
-  <div class="flex-wrapper">
-    <Button on:click={handleClick} text={buttonText} />
+  <div class="flex flex-col">
+    <Button on:click={handleClick} text={buttonText} class="w-full" />
     {#if error}
-      <h4 class="msg error-msg">{error}</h4>
+      <h4 class="text-red-500 max-w-32">{error}</h4>
     {:else}
-      <h4 class="msg success-msg">{message}</h4>
-    {/if}
-  </div>
-  <div class="options-wrapper"><OptionsLink /></div>
+      <h4 class="text-green-500">{message}</h4>
+    {/if}</div>
+  <div class="absolute text-lg top-0 right-0"><OptionsLink /></div>
 {/if}
 
-<style lang="scss">
-  .options-wrapper {
-    font-size: 10px;
-    position: absolute;
-    top: 0px;
-    right: -14px;
-  }
-  .flex-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .msg {
-    padding-top: 0.2em;
-
-    &.error-msg {
-      color: red;
-    }
-    &.success-msg {
-      color: limegreen;
-    }
-  }
-</style>

@@ -10,7 +10,7 @@ chrome.runtime.onMessage.addListener((msg, messageSender, sendReply) => {
         // username and password must necessarily be defined
 
         if (!hashedUsername || !hashedPassword) {
-          throw new Error('Credentials are not defined!')
+          throw new Error('Identifiants non définis!')
         }
 
         const username = await decrypt(hashedUsername)

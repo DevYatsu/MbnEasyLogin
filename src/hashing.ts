@@ -5,7 +5,7 @@ export async function encrypt(str: string) {
   // key must necessarily be defined
 
   if (!secret_key) {
-    throw new Error('No secret key defined! Something is wrong!')
+    throw new Error('Aucune clé secrète définie ! Quelque chose ne va pas !')
   }
 
   const encrypted = CryptoJS.AES.encrypt(str, secret_key)
@@ -17,7 +17,7 @@ export async function decrypt(encryptedString: CryptoJS.lib.CipherParams) {
   // key must necessarily be defined
 
   if (!secret_key) {
-    throw new Error('No secret key defined! Something is wrong!')
+    throw new Error('Aucune clé secrète définie ! Quelque chose ne va pas !')
   }
 
   const decryptedBytes = CryptoJS.AES.decrypt(encryptedString, secret_key)

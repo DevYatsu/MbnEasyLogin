@@ -53,11 +53,11 @@ export async function checkCredentials(): Promise<void> {
   }
 
   if (credentialsError) {
-    return Promise.reject(new Error('Invalid password or username'))
+    return Promise.reject(new Error("Nom d'utilisateur ou mot de passe invalide!"))
   }
 
   if (!username || !password) {
-    return Promise.reject(new Error('No username or password set to connect'))
+    return Promise.reject(new Error('Aucun identifiant entré pour se connecter!'))
   }
 }
 

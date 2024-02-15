@@ -4,7 +4,7 @@
 </script>
 
 {#if variant === "connect"}
-<button on:click class="connect-button">
+<button on:click class="connect-button {$$restProps.class}">
   <div class="svg-1">
     <svg
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -26,7 +26,7 @@
 {:else if variant === "beautiful"}
 <button
   on:click
-  class="overflow-hidden relative w-32 p-2 h-12 bg-black text-white border-none rounded-md text-xl font-bold cursor-pointer z-10 group"
+  class="overflow-hidden relative w-32 p-2 h-12 bg-black text-white border-none rounded-md text-xl font-bold cursor-pointer z-10 group {$$restProps.class}"
 >
   {text}
   <span
@@ -46,7 +46,7 @@
 {:else if variant === "close"}
 <button
   on:click
-  class="relative border-2 border-black group hover:border-green-500 w-12 h-12 duration-500 overflow-hidden"
+  class="relative border-2 border-black group hover:border-green-500 w-12 h-12 duration-500 overflow-hidden {$$restProps.class}"
   type="button"
 >
   <p

@@ -1,10 +1,12 @@
 <script lang="ts">
-  export let checked: boolean = false
-  export let className: string = ""
+  export let checked: boolean
+  export let name: string = ""
+  export let placeholder: string = ""
+  export let id:string = ""
 </script>
 
 <label class="wrapper">
-  <input {checked} type="checkbox">
+  <input {checked} {name} {placeholder} {id} on:change type="checkbox">
   <div class="checkmark"></div>
 </label>
 

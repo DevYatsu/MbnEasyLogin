@@ -1,12 +1,16 @@
 <script>
   import "../app.pcss"
   import { createForm } from 'svelte-forms-lib'
-  import Card from '../components/Card.svelte'
-  import Backbutton from '../components/Backbutton.svelte'
   import { encrypt } from '../hashing'
   import Input from "$lib/components/ui/input/input.svelte"
   import Button from "../components/Button.svelte"
   import CheckBox from "../components/CheckBox.svelte"
+
+  const closeOptions = () => {
+    chrome.tabs.getCurrent((tab) => {
+      if (tab && tab.id) chrome.tabs.remove(tab.id, () => { });
+    })
+  }
 
   let isSubmitted = false
   let initialValues = {
@@ -38,16 +42,14 @@
     },
   })
 
-  chrome.storage.local.get(['username', 'password', 'goToFirstSchoolAutomatically'], (data) => {
-    $form.username = data.username
-    $form.password = data.password
+  chrome.storage.local.get(['goToFirstSchoolAutomatically'], (data) => {
     $form.goToFirstSchoolAutomatically = data.goToFirstSchoolAutomatically
   })
 </script>
 
 <main>
   {#if isSubmitted}
-    <div class="container"><Backbutton on:click={() => (isSubmitted = false)} /><Card /></div>
+    <div class="container flex justify-center"><Button variant="close" on:click={closeOptions} /></div>
   {:else}
   <div class="wrapper container">
         <form on:submit={handleSubmit} >
@@ -112,7 +114,7 @@
                 >Les informations sensibles sont stockées en toute sécurité dans le stockage de Chrome et ne peuvent en aucun cas être divulguées.</span
               ></div>
 
-              <div><Button variant="beautiful" text="Valider"/></div>
+              <div><Button variant="beautiful" text="Valider" /></div>
           </form>
           </div>          
 
@@ -121,7 +123,7 @@
 
 <style lang="postcss">
 :global(body), :global(html){
-  @apply w-full h-full m-0 p-0 bg-[#f2f2f9] text-[#383838];
+  @apply w-full h-full m-0 p-0 bg-background text-foreground;
 }
 
 :global(#app) {
@@ -130,10 +132,15 @@
 
 main {
   @apply w-full h-full flex justify-center items-center px-3;
+  --color: #E1E1E1;
+  background-image: linear-gradient(0deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent),
+      linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent);
+  background-size: 55px 55px;
 }
 
 .wrapper {
-  @apply w-full  max-w-2xl bg-white py-6 text-lg;
+  @apply w-full max-w-2xl bg-white py-6 text-lg;
+
 }
 
 .input-wrapper {

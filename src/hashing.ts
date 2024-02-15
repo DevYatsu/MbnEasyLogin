@@ -9,8 +9,6 @@ export async function encrypt(str: string) {
   }
 
   const encrypted = CryptoJS.AES.encrypt(str, secret_key)
-  console.log({ encrypted })
-
   return encrypted
 }
 
@@ -21,8 +19,6 @@ export async function decrypt(encryptedString: CryptoJS.lib.CipherParams) {
   if (!secret_key) {
     throw new Error('No secret key defined! Something is wrong!')
   }
-
-  console.log({ encryptedString })
 
   const decryptedBytes = CryptoJS.AES.decrypt(encryptedString, secret_key)
   const plainText = decryptedBytes.toString(CryptoJS.enc.Utf8)

@@ -1,6 +1,6 @@
 <script lang="ts">
   export let text: string = 'Click'
-  export let variant: "connect" | "beautiful" = "connect"
+  export let variant: "connect" | "beautiful" | "close" = "connect"
 </script>
 
 {#if variant === "connect"}
@@ -23,7 +23,7 @@
   </div>
   <p>{text}</p>
 </button>
-{:else}
+{:else if variant === "beautiful"}
 <button
   on:click
   class="overflow-hidden relative w-32 p-2 h-12 bg-black text-white border-none rounded-md text-xl font-bold cursor-pointer z-10 group"
@@ -42,6 +42,30 @@
     class="group-hover:opacity-100 group-hover:duration-1000 duration-100 opacity-0 absolute top-2.5 left-6 z-10"
     >{text}</span
   >
+</button>
+{:else if variant === "close"}
+<button
+  on:click
+  class="relative border-2 border-black group hover:border-green-500 w-12 h-12 duration-500 overflow-hidden"
+  type="button"
+>
+  <p
+    class="font-Manrope text-3xl h-full w-full flex items-center justify-center text-black duration-500 relative z-10 group-hover:scale-0"
+  >
+    ×
+  </p>
+  <span
+    class="absolute w-full h-full bg-green-500 rotate-45 group-hover:top-9 duration-500 top-12 left-0"
+  ></span>
+  <span
+    class="absolute w-full h-full bg-green-500 rotate-45 top-0 group-hover:left-9 duration-500 left-12"
+  ></span>
+  <span
+    class="absolute w-full h-full bg-green-500 rotate-45 top-0 group-hover:right-9 duration-500 right-12"
+  ></span>
+  <span
+    class="absolute w-full h-full bg-green-500 rotate-45 group-hover:bottom-9 duration-500 bottom-12 right-0"
+  ></span>
 </button>
 {/if}
 

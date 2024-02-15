@@ -2,8 +2,6 @@ export function updateTabURL(tabId: number, newUrl: string) {
   chrome.tabs.update(tabId, { url: newUrl }, function (updatedTab) {
     if (chrome.runtime.lastError) {
       console.error(chrome.runtime.lastError)
-    } else {
-      console.log('Tab URL updated successfully.')
     }
   })
 }

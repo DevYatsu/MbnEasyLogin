@@ -1,11 +1,15 @@
+import { decrypt, generate_key } from '../hashing'
 import { clearScriptRunner, IsScriptRunner, setCrendentialsError } from '../utils'
 
 chrome.runtime.onMessage.addListener((msg, messageSender, sendReply) => {
   switch (msg.action) {
     case 'requestCredentials': {
       ;(async () => {
-        const { username, password } = await chrome.storage.local.get()
+        const { hashedUsername, hashedPassword } = await chrome.storage.local.get()
         // username and password defined for sure
+
+        const username = decrypt(hashedUsername)
+        const password = decrypt(hashedPassword)
 
         sendReply({ username, password })
       })()
@@ -48,6 +52,13 @@ chrome.runtime.onMessage.addListener((msg, messageSender, sendReply) => {
         await clearScriptRunner()
       })()
     }
+  }
+})
+
+chrome.runtime.onInstalled.addListener(async function (details) {
+  if (details.reason === 'install') {
+    const key = generate_key()
+    await chrome.storage.local.set({ key })
   }
 })
 

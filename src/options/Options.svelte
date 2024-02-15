@@ -3,6 +3,7 @@
   import CheckBox from '../components/CheckBox.svelte'
   import Card from '../components/Card.svelte'
   import Backbutton from '../components/Backbutton.svelte'
+  import { encrypt } from '../hashing'
 
   let isSubmitted = false
   let initialValues = {
@@ -14,6 +15,9 @@
   const { form, errors, handleChange, handleSubmit } = createForm({
     initialValues,
     onSubmit: async (values) => {
+      values.password = encrypt(values.password)
+      values.username = encrypt(values.username)
+      
       await chrome.storage.local.set(values)
       await chrome.storage.local.remove('credentialsError')
 

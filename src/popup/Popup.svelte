@@ -1,4 +1,5 @@
 <script lang="ts">
+  import "../app.pcss"
   import Section from '../components/Section.svelte'
 </script>
 
@@ -7,22 +8,16 @@
 </main>
 
 <style>
-  :root {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-      'Open Sans', 'Helvetica Neue', sans-serif;
-
-    --bg-main: '#001d3d';
-    --bg-secondary: '#003566';
-    --text-main: '#fff';
-    --text-secondary: '#ffc300';
-  }
-
-  :global(body) {
+  :global(body), :global(html) {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
     background-color: #001d3d;
-    color: #fff;
+    color: #fff;    
     min-width: 15rem;
     min-height: 5rem;
-  }
+}
 
   main {
     text-align: center;

@@ -1,144 +1,91 @@
-<script>
-  export let placeholder = ''
-  export let checked
-  export let name
+<script lang="ts">
+  export let checked: boolean = false
+  export let className: string = ""
 </script>
 
-<div class="container">
-  <div class="checkbox-wrapper">
-    <input id="_checkbox-26" type="checkbox" bind:checked {name} />
-    <label for="_checkbox-26">
-      <div class="tick_mark" />
-    </label>
-  </div>
-  <div class="text-container">
-    <div class="checkbox-txt">{placeholder}</div>
-  </div>
-</div>
+<label class="wrapper">
+  <input {checked} type="checkbox">
+  <div class="checkmark"></div>
+</label>
 
 <style>
-  .text-container {
-    width: 100%;
-    text-align: left;
-    padding-left: 0.4em;
-  }
-  .checkbox-txt {
-    font-size: 0.7em;
-    max-width: 25em;
-    overflow-wrap: break-word;
-  }
-  .container {
-    display: flex;
-    align-items: center;
+/* Hide the default checkbox */
+.wrapper input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.wrapper {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  font-size: 1.5rem;
+  user-select: none;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  --clr: #079367;
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 1.3em;
+  width: 1.3em;
+  background-color: #ccc;
+  border-radius: 50%;
+  transition: 300ms;
+}
+
+/* When the checkbox is checked, add a blue background */
+.wrapper input:checked ~ .checkmark {
+  background-color: var(--clr);
+  border-radius: .5rem;
+  animation: pulse 500ms ease-in-out;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.wrapper input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.wrapper .checkmark:after {
+  left: 0.45em;
+  top: 0.25em;
+  width: 0.25em;
+  height: 0.5em;
+  border: solid #E0E0E2;
+  border-width: 0 0.15em 0.15em 0;
+  transform: rotate(45deg);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 #0B6E4F90;
+    rotate: 20deg;
   }
 
-  .checkbox-wrapper * {
-    -webkit-tap-highlight-color: transparent;
-    outline: none;
+  50% {
+    rotate: -20deg;
   }
 
-  .checkbox-wrapper input[type='checkbox'] {
-    display: none;
+  75% {
+    box-shadow: 0 0 0 10px #0B6E4F60;
   }
 
-  .checkbox-wrapper label {
-    --size: 30px;
-    --shadow: calc(var(--size) * 0.07) calc(var(--size) * 0.1);
-    position: relative;
-    display: block;
-    width: var(--size);
-    height: var(--size);
-    margin: 0 auto;
-    background-color: #4158d0;
-    background-image: linear-gradient(43deg, #4158d0 0%, #c850c0 46%, #ffcc70 100%);
-    border-radius: 50%;
-    box-shadow: 0 var(--shadow) #ffbeb8;
-    cursor: pointer;
-    transition: 0.2s ease transform, 0.2s ease background-color, 0.2s ease box-shadow;
-    overflow: hidden;
-    z-index: 1;
+  100% {
+    box-shadow: 0 0 0 13px #0B6E4F30;
+    rotate: 0;
   }
-
-  .checkbox-wrapper label:before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 0;
-    left: 0;
-    width: calc(var(--size) * 0.7);
-    height: calc(var(--size) * 0.7);
-    margin: 0 auto;
-    background-color: #fff;
-    transform: translateY(-50%);
-    border-radius: 50%;
-    box-shadow: inset 0 var(--shadow) #ffbeb8;
-    transition: 0.2s ease width, 0.2s ease height;
-  }
-
-  .checkbox-wrapper label:hover:before {
-    width: calc(var(--size) * 0.55);
-    height: calc(var(--size) * 0.55);
-    box-shadow: inset 0 var(--shadow) #ff9d96;
-  }
-
-  .checkbox-wrapper label:active {
-    transform: scale(0.9);
-  }
-
-  .checkbox-wrapper .tick_mark {
-    position: absolute;
-    top: -1px;
-    right: 0;
-    left: calc(var(--size) * -0.05);
-    width: calc(var(--size) * 0.6);
-    height: calc(var(--size) * 0.6);
-    margin: 0 auto;
-    margin-left: calc(var(--size) * 0.14);
-    transform: rotateZ(-40deg);
-  }
-
-  .checkbox-wrapper .tick_mark:before,
-  .checkbox-wrapper .tick_mark:after {
-    content: '';
-    position: absolute;
-    background-color: #fff;
-    border-radius: 2px;
-    opacity: 0;
-    transition: 0.2s ease transform, 0.2s ease opacity;
-  }
-
-  .checkbox-wrapper .tick_mark:before {
-    left: 0;
-    bottom: 0;
-    width: calc(var(--size) * 0.1);
-    height: calc(var(--size) * 0.3);
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.23);
-    transform: translateY(calc(var(--size) * -0.68));
-  }
-
-  .checkbox-wrapper .tick_mark:after {
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: calc(var(--size) * 0.1);
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.23);
-    transform: translateX(calc(var(--size) * 0.78));
-  }
-
-  .checkbox-wrapper input[type='checkbox']:checked + label {
-    background-color: #4158d0;
-    background-image: linear-gradient(43deg, #4158d0 0%, #c850c0 46%, #ffcc70 100%);
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
-  }
-
-  .checkbox-wrapper input[type='checkbox']:checked + label:before {
-    width: 0;
-    height: 0;
-  }
-
-  .checkbox-wrapper input[type='checkbox']:checked + label .tick_mark:before,
-  .checkbox-wrapper input[type='checkbox']:checked + label .tick_mark:after {
-    transform: translate(0);
-    opacity: 1;
-  }
+}
 </style>

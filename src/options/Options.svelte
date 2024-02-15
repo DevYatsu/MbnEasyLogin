@@ -6,6 +6,7 @@
   import { encrypt } from '../hashing'
   import Input from "$lib/components/ui/input/input.svelte"
   import Button from "../components/Button.svelte"
+  import CheckBox from "../components/CheckBox.svelte"
 
   let isSubmitted = false
   let initialValues = {
@@ -88,15 +89,15 @@
             </div>
               
 
-              <div class="flex gap-2">
-                <input type="checkbox"
+              <div class="flex items-center gap-2">
+                <CheckBox
                   on:change={handleChange}
                   name="goToFirstSchoolAutomatically"
                   bind:checked={$form.goToFirstSchoolAutomatically}
                   placeholder="Se rediriger directement dans la première école parmi la liste des écoles disponibles"
                   id="goToFirstSchoolAutomatically"
                 />
-                <div class="grid gap-1.5 leading-none">
+                <div class="grid gap-1.5 leading-none ">
                   <span
                   for="goToFirstSchoolAutomatically"
                   class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -107,11 +108,11 @@
               </div>
 
               <div class="flex py-6">
-                <span class="text-sm text-red-500"
+                <span class="text-sm text-blue-500"
                 >Les informations sensibles sont stockées en toute sécurité dans le stockage de Chrome et ne peuvent en aucun cas être divulguées.</span
               ></div>
 
-                <Button variant="beautiful" text="Valider"/>
+              <div><Button variant="beautiful" text="Valider"/></div>
           </form>
           </div>          
 

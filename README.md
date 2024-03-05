@@ -6,7 +6,7 @@ Facilitez l'accès à Mon Bureau Numérique avec notre extension. Plus besoin de
 
 ## Comment l'utiliser ?
 
-[Simplement, rendez-vous ici](https://github.com/DevYatsu/MbnEasyLogin/releases)
+[Simplement, rendez-vous ici](https://github.com/DevYatsu/MbnEasyLogin/releases/latest)
 
 ## Autres ressources
 Après avoir développé l'extension, j'ai découvert une autre extension offrant des fonctionnalités similaires. Vous pouvez la trouver [ici](https://github.com/mateo08c/ENTAutoConnect) si cela vous intéresse

@@ -3,7 +3,7 @@ import { defineManifest } from '@crxjs/vite-plugin'
 export default defineManifest({
   name: 'MbnEasyLogin',
   description: 'An extension to easily login to Mbn',
-  version: '1.1.1',
+  version: '1.1.2',
   manifest_version: 3,
   icons: {
     '128': 'img/logo-128.png',

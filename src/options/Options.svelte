@@ -47,13 +47,13 @@
   })
 </script>
 
-<main>
+<main class="w-full h-full py-4">
   {#if isSubmitted}
     <div class="container flex justify-center"><Button variant="close" on:click={closeOptions} /></div>
   {:else}
-  <div class="wrapper container">
+  <div class="container wrapper">
         <form on:submit={handleSubmit} >
-            <h1 class="text-2xl font-bold pb-6 text-center">MbnEasyLogin Options</h1>
+            <h1 class="pb-6 text-2xl font-bold text-center">MbnEasyLogin Options</h1>
             <div class="input-wrapper">
                 <span for="username">Nom d'utilisateur</span>
                 <Input
@@ -122,12 +122,16 @@
 </main>
 
 <style lang="postcss">
-:global(body), :global(html){
+:global(html){
   @apply w-full h-full m-0 p-0 bg-background text-foreground;
 }
 
+:global(body) {
+  @apply w-full min-h-full m-0 p-0 bg-background text-foreground flex justify-center;
+}
+
 :global(#app) {
-  @apply h-full;
+  @apply min-h-full w-full;
 }
 
 main {
@@ -140,11 +144,9 @@ main {
 
 .wrapper {
   @apply w-full max-w-2xl bg-white py-6 text-lg;
-
 }
 
 .input-wrapper {
   @apply grid w-full max-w-sm items-center gap-1.5 pb-4;
 }
-
 </style>

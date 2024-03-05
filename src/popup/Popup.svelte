@@ -13,7 +13,7 @@
     height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #001d3d;
+    background-color: #43497d;
     color: #fff;    
     min-width: 15rem;
     min-height: 5rem;
